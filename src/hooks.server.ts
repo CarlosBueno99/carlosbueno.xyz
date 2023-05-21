@@ -7,7 +7,7 @@ import { redirect, type Handle } from "@sveltejs/kit";
 import { sequence } from "@sveltejs/kit/hooks";
 
 async function authorization({ event, resolve }) {
-  // Protect any routes under /authenticated
+  // Protect any routes under /discord
   if (event.url.pathname.startsWith("/discord")) {
     const session = await event.locals.getSession();
     if (!session) {
