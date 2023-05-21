@@ -1,0 +1,53 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+  relationMode = "prisma"
+}
+
+
+
+model DiscordBot {
+  id        String   @id @default(cuid())
+  name      String
+  channel   String
+  imageUrl  String
+  type      String
+  messages  DiscordMessage[]
+  createdAt DateTime @default(now())
+}
+
+model DiscordMessage {
+  id          String     @id @default(cuid())
+  messageText String
+  bot         DiscordBot @relation(fields: [botId], references: [id])
+  botId       String
+
+  @@index([botId])
+}
+
+model User {
+  id           String   @id @default(cuid())
+  name         String
+  imageUrl     String
+  subscription String
+  webhooks     DiscordWebhook[]
+  createdAt    DateTime @default(now())
+}
+
+model DiscordWebhook {
+  id           String   @id @default(cuid())
+  name         String
+  webhookUrl   String
+  owner        User     @relation(fields: [ownerId], references: [id])
+  ownerId      String
+  createdAt    DateTime @default(now())
+
+  @@index([ownerId])
+}

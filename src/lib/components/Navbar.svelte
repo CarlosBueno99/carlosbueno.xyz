@@ -5,9 +5,9 @@
 <div class="navbar bg-base-500">
 	<div class="navbar-start">
 		<div class="dropdown dropdown-hover">
-			<button tabindex="-1" class="btn btn-ghost btn-primary m-1">Menu</button>
+			<button tabindex="-1" class="btn btn-ghost btn-primary m-2">Menu</button>
 			<ul tabindex="-1" class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52">
-				<li><a href="/discord">Enviar mensagem para discord <span class="bg-green-400 text-black badge">New</span> </a> </li>
+				<li><a href="/discord">Discord service <span class="bg-green-400 text-black badge">New</span> </a> </li>
 			</ul>
 		</div>
 	</div>
