@@ -32,6 +32,7 @@
 					<option value="Ifood do PUBG">Ifood do PUBG</option>
 					<option value="Deuses do CS">Deuses do CS</option>
 					<option value="Fiscal de pinada">Fiscal de pinada</option>
+					<option value="Princesa Zelda">Princesa Zelda</option>
 
 				</select>
 		

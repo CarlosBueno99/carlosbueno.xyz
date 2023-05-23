@@ -34,6 +34,12 @@ export const postMessage = async (message: string, user: string) => {
             "avatar_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7c/Cima_da_Conegliano%2C_God_the_Father.jpg/300px-Cima_da_Conegliano%2C_God_the_Father.jpg",
             "content": input.message
         }
+    } else if (input.user == "Princesa Zelda") {
+        payload = {
+            "username": input.user,
+            "avatar_url": "https://criticalhits.com.br/wp-content/uploads/2021/04/Zelda.jpg",
+            "content": input.message
+        }
     } else {
         payload = {
             "username": input.user,
