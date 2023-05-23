@@ -11,7 +11,7 @@ async function authorization({ event, resolve }) {
   if (event.url.pathname.startsWith("/discord")) {
     const session = await event.locals.getSession();
     
-    if (!session) {
+    if (!session.user.email === OWNER_EMAIL) {
       throw redirect(303, "/auth");
     }
   }
