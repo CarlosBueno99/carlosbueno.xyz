@@ -20,6 +20,8 @@
 			<span class="text-primary">You are not signed in</span>
 			<br />
 			<button class="btn btn-primary" on:click={() => signIn('github')}>Sign In with GitHub</button>
+			<button class="btn btn-primary" on:click={() => signIn('google')}>Sign In with Google</button>
+
             <button class="btn btn-error" on:click={() => signOut()}>Sign out</button>
 
             
