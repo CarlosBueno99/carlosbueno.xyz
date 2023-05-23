@@ -8,18 +8,21 @@ import { sequence } from "@sveltejs/kit/hooks";
 
 async function authorization({ event, resolve }) {
   // Protect any routes under /discord
+  const session = await event.locals.getSession()
+  console.log('this is the session',session);
   if (event.url.pathname.startsWith("/discord")) {
     const session = await event.locals.getSession();
-    console.log(session.user.email);
     
     if (!session) {
       throw redirect(303, "/auth");
     }
-    
   }
 
-  // If the request is still here, just proceed as normally
-  return resolve(event);
+  const response = await resolve(event)
+  
+
+  
+  return response;
 }
 
 

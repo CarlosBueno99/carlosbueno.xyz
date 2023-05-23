@@ -1,5 +1,6 @@
 <script lang="ts">
 	export const focus: string = '';
+	import { page } from '$app/stores';
 </script>
 
 <div class="navbar bg-base-500">
@@ -7,7 +8,11 @@
 		<div class="dropdown dropdown-hover">
 			<button tabindex="-1" class="btn btn-ghost btn-primary m-2">Menu</button>
 			<ul tabindex="-1" class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52">
-				<li><a href="/discord">Discord service <span class="bg-green-400 text-black badge">New</span> </a> </li>
+				<li>
+					<a href="/discord"
+						>Discord service <span class="bg-green-400 text-black badge">New</span>
+					</a>
+				</li>
 			</ul>
 		</div>
 	</div>
@@ -20,7 +25,11 @@
 				<!-- svelte-ignore a11y-no-noninteractive-tabindex -->
 				<div tabindex="0" class="btn btn-ghost btn-circle avatar">
 					<div class="w-10 rounded-full">
-						<img src="/me.jpg" alt="profile_pic" />
+						{#if $page.data?.session?.user?.image}
+							<img src={$page.data?.session?.user?.image} alt="profile_pic" />
+						{:else}
+							<img src="/asdf.jpeg" alt="profile_pic" />
+						{/if}
 					</div>
 				</div>
 				<ul
@@ -34,6 +43,7 @@
 						</a>
 					</li>
 					<li><a href="/about">About</a></li>
+					<li><a href="/auth">Auth</a></li>
 				</ul>
 			</div>
 		</div>

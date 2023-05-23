@@ -4,7 +4,7 @@
 </script>
 
 <div class="">
-	<h1 class="text-center p-4">Please, authenticate youself</h1>
+	<h1 class="text-center p-4">Authentication</h1>
 	<p class="text-center p-2">
 		{#if $page.data.session}
 			{#if $page.data.session.user?.image}
