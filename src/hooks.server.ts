@@ -10,8 +10,9 @@ async function authorization({ event, resolve }) {
   // Protect any routes under /discord
   if (event.url.pathname.startsWith("/discord")) {
     const session = await event.locals.getSession();
-    
-    if (!session.user.email === OWNER_EMAIL) {
+    if (!session) {
+      throw redirect(303, "/auth");
+    } else if (session.user.email !== OWNER_EMAIL){
       throw redirect(303, "/auth");
     }
   }
