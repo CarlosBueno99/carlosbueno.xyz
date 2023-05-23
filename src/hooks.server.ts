@@ -15,10 +15,6 @@ async function authorization({ event, resolve }) {
     if (!session) {
       throw redirect(303, "/auth");
     }
-
-    if (session.user.email === OWNER_EMAIL){ // I'll change this section for a better way to authorize users
-      throw redirect(401, "/auth?message=you are not authorized to access this page");
-    }
     
   }
 
