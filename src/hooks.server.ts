@@ -8,8 +8,6 @@ import { sequence } from "@sveltejs/kit/hooks";
 
 async function authorization({ event, resolve }) {
   // Protect any routes under /discord
-  const session = await event.locals.getSession()
-  console.log('this is the session',session);
   if (event.url.pathname.startsWith("/discord")) {
     const session = await event.locals.getSession();
     
