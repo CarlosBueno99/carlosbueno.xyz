@@ -56,8 +56,6 @@ export const handle: Handle = sequence(
     ],
     callbacks: {
       async session({session, user}) {
-        // console.log("user");
-        // console.log(user);
         
         if (user){
           session.user.id = user.id,

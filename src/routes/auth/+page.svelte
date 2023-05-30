@@ -3,7 +3,7 @@
 	import { page } from '$app/stores';
 </script>
 
-<div class="">
+
 	<h1 class="text-center p-4">Authentication</h1>
 	<p class="text-center p-2">
 		{#if $page.data.session}
@@ -25,4 +25,4 @@
             
 		{/if}
 	</p>
-</div>
+
