@@ -1,8 +1,7 @@
 import { getCounterStrikeStats } from '$lib/server/steam';
-import type { PageServerLoad } from './$types';
 
 
-export const load: PageServerLoad = async ({setHeaders}) => {
+export const load = async ({setHeaders}) => {
     const csgoStats = await getCounterStrikeStats()
     
     setHeaders({

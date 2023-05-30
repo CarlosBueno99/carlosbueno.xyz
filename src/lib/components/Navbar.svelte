@@ -1,6 +1,7 @@
 <script lang="ts">
 	export const focus: string = '';
 	import { page } from '$app/stores';
+	
 </script>
 
 <div class="navbar bg-base-500">
