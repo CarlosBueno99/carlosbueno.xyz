@@ -6,8 +6,7 @@ import Google from "@auth/core/providers/google";
 import Cognito from "@auth/core/providers/cognito";
 import { 
   GITHUB_ID,
-  GITHUB_SECRET, 
-  OWNER_EMAIL, 
+  GITHUB_SECRET,
   GOOGLE_CLIENT_ID, 
   GOOGLE_CLIENT_SECRET,
   COGNITO_CLIENT_ID,
@@ -24,7 +23,7 @@ async function authorization({ event, resolve }) {
     const session = await event.locals.getSession();
     if (!session) {
       throw redirect(303, "/auth");
-    } else if (session.user.email !== OWNER_EMAIL){
+    } else if (session.user.role !== "ADMIN"){
       throw redirect(303, "/auth");
     }
   }
@@ -55,6 +54,22 @@ export const handle: Handle = sequence(
         issuer: COGNITO_ISSUER,
       }),
     ],
+    callbacks: {
+      async session({session, user}) {
+        // console.log("user");
+        // console.log(user);
+        
+        if (user){
+          session.user.id = user.id,
+          session.user.name = user.name,
+          session.user.email = user.email,
+          session.user.image = user.image,
+          session.user.role = user.role,
+          session.user.subscription = user.subscription
+        }
+        return session
+      }
+    }
   }),
   authorization
 );
