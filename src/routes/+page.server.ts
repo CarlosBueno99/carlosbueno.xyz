@@ -5,7 +5,7 @@ export const load = async ({setHeaders}) => {
     const csgoStats = await getCounterStrikeStats()
     
     setHeaders({
-        'Cache-Control': 'max-age=3600'
+        'Cache-Control': 'public, s-max-age=3600'
     })
 
     return {
