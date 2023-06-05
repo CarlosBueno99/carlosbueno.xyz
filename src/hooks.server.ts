@@ -80,6 +80,8 @@ export const handleError = (async ({ error, event }) => {
   const errorId = crypto.randomUUID();
   console.log("that's weird");
   console.log(event.request.headers.get('cf-ipcountry'));
+  console.log(event.request.headers.get('cf-ray'));
+  console.log(event.request.headers.get('cf-connecting-ip'));
   console.log(event.request.headers)
   console.log(errorId);
   
