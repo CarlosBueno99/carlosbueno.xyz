@@ -57,7 +57,7 @@ export const handle: Handle = sequence(
     callbacks: {
       async session({session, token}) {
         console.log(session, token)
-        if (user){
+        if (token){
           session.user.id = token.id,
           session.user.name = token.name,
           session.user.email = token.email,
