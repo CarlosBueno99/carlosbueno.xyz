@@ -55,15 +55,16 @@ export const handle: Handle = sequence(
       }),
     ],
     callbacks: {
-      async session({session, user}) {
+      async session({session, token}) {
         
         if (user){
-          session.user.id = user.id,
-          session.user.name = user.name,
-          session.user.email = user.email,
-          session.user.image = user.image,
-          session.user.role = user.role,
-          session.user.subscription = user.subscription
+          session.user.id = token.id,
+          session.user.name = token.name,
+          session.user.email = token.email,
+          session.user.image = token.image,
+          session.user.role = token.role,
+          session.user.subscription = token.subscription
+          session.user.token = token.accessToken
         }
         return session
       }
