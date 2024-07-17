@@ -22,7 +22,7 @@
 			<button class="btn btn-primary" on:click={() => signIn('google')}>Sign In with Google</button>
             <button class="btn btn-error" on:click={() => signOut()}>Sign out</button>
 			<br />
-			<button class="btn btn-primary" on:click={() => signIn('github')}>Sign In with Google</button>
+			<button class="btn btn-primary" on:click={() => signIn('github')}>Sign In with Github</button>
             <button class="btn btn-error" on:click={() => signOut()}>Sign out</button>
 
             
