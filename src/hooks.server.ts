@@ -12,8 +12,6 @@ import {
   COGNITO_CLIENT_ID,
   COGNITO_CLIENT_SECRET,
   COGNITO_ISSUER} from "$env/static/private";
-import { PrismaAdapter } from "@next-auth/prisma-adapter";
-import { prisma } from "$lib/server/prisma"
 import { redirect, type Handle } from "@sveltejs/kit";
 import { sequence } from "@sveltejs/kit/hooks";
 
@@ -41,7 +39,6 @@ async function authorization({ event, resolve }) {
 
 export const handle: Handle = sequence(
   SvelteKitAuth({
-    adapter: PrismaAdapter(prisma),
     providers: [
       GitHub({ 
         clientId: GITHUB_ID, 
