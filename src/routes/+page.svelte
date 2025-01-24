@@ -1,5 +1,6 @@
 <script lang="ts">
 	import type { PageData } from './$types';
+	import SpotifyStats from '$lib/components/SpotifyStats.svelte';
 
 	export let data: PageData;
 	const { kd, winRate, hsPercentage, adr, stats } = data.stats;
@@ -139,6 +140,11 @@
 					{/each}
 				</div>
 			</div>
+		</div>
+
+		<div class="mt-6">
+			<h2 class="text-[#999999] text-xl font-medium mb-4">Spotify Stats</h2>
+			<SpotifyStats />
 		</div>
 	</div>
 </div>

@@ -1,9 +1,9 @@
 import { createClient } from '@libsql/client';
-import { TURSO_DATABASE_URL, TURSO_AUTH_TOKEN, SPOTIFY_CLIENT_ID, SPOTIFY_CLIENT_SECRET } from '$env/static/private';
+import { env } from '$env/dynamic/private';
 
 const turso = createClient({
-  url: TURSO_DATABASE_URL,
-  authToken: TURSO_AUTH_TOKEN
+  url: env.TURSO_DATABASE_URL,
+  authToken: env.TURSO_AUTH_TOKEN
 });
 
 async function getAccessToken() {
@@ -16,7 +16,7 @@ async function getAccessToken() {
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded',
       Authorization: `Basic ${Buffer.from(
-        `${SPOTIFY_CLIENT_ID}:${SPOTIFY_CLIENT_SECRET}`
+        `${env.SPOTIFY_CLIENT_ID}:${env.SPOTIFY_CLIENT_SECRET}`
       ).toString('base64')}`,
     },
     body: new URLSearchParams({
@@ -71,4 +71,4 @@ export async function getTopGenres() {
     .sort(([, a], [, b]) => b - a)
     .slice(0, 5)
     .map(([genre]) => genre);
-}
+} 
