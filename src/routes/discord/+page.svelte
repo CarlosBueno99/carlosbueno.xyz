@@ -5,6 +5,10 @@
 	<title>Discord tools</title>
 </svelte:head>
 
+<main>
+  <h2 class="text-2xl font-bold mb-6">Discord Integration</h2>
+  <!-- Add your Discord-related components here -->
+</main>
 
 <h1 class="text-xl text-center basis-full">Discord tools</h1>
 
