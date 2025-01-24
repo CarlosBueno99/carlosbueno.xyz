@@ -20,7 +20,7 @@ async function authorization({ event, resolve }) {
   if (event.url.pathname.startsWith("/discord")) {
     const session = await event.locals.getSession();
 
-    console.log('discord');
+    console.log('discord session', session);
     
     if (!session) {
       throw redirect(303, "/auth");
