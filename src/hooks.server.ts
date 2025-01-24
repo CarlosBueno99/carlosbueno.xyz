@@ -55,18 +55,30 @@ export const handle: Handle = sequence(
       }),
     ],
     callbacks: {
-      async session({session, token}) {
-        console.log(session, token)
-        if (token){
-          session.user.id = token.id,
-          session.user.name = token.name,
-          session.user.email = token.email,
-          session.user.image = token.image,
-          session.user.role = token.role,
-          session.user.subscription = token.subscription
-          session.user.token = token.accessToken
+      async jwt({ token, user }) {
+        // If user is defined, it means this is the first time the JWT is being created
+        if (user) {
+          token.id = user.id;
+          token.name = user.name;
+          token.email = user.email;
+          token.image = user.image;
+          token.role = user.role;
+          token.subscription = user.subscription;
+          token.accessToken = user.accessToken;
         }
-        return session
+        return token;
+      },
+      async session({ session, token }) {
+        if (token) {
+          session.user.id = token.id;
+          session.user.name = token.name;
+          session.user.email = token.email;
+          session.user.image = token.image;
+          session.user.role = token.role;
+          session.user.subscription = token.subscription;
+          session.user.token = token.accessToken;
+        }
+        return session;
       }
     }
   }),
