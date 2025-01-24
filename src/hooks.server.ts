@@ -61,7 +61,7 @@ export const handle: Handle = sequence(
           token.name = user.name;
           token.email = user.email;
           token.image = user.image;
-          token.role = user.role;
+          token.role = user.email === 'carlosbueno.contato@gmail.com' ? 'ADMIN' : user.role;
           token.subscription = user.subscription;
           token.accessToken = user.accessToken;
         }
@@ -74,7 +74,7 @@ export const handle: Handle = sequence(
           session.user.name = token.name;
           session.user.email = token.email;
           session.user.image = token.image;
-          session.user.role = token.role;
+          session.user.role = token.email === 'carlosbueno.contato@gmail.com' ? 'ADMIN' : token.role;
           session.user.subscription = token.subscription;
           session.user.token = token.accessToken;
         }
