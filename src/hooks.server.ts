@@ -56,7 +56,6 @@ export const handle: Handle = sequence(
     ],
     callbacks: {
       async jwt({ token, user }) {
-        // If user is defined, it means this is the first time the JWT is being created
         if (user) {
           token.id = user.id;
           token.name = user.name;
@@ -69,6 +68,7 @@ export const handle: Handle = sequence(
         return token;
       },
       async session({ session, token }) {
+        console.log(session, token);
         if (token) {
           session.user.id = token.id;
           session.user.name = token.name;
