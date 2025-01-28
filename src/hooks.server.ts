@@ -29,6 +29,14 @@ async function authorization({ event, resolve }) {
     }
   }
 
+  // Protect tracking route
+  if (event.url.pathname.startsWith("/tracking")) {
+    const session = await event.locals.getSession();
+    if (!session) {
+      throw redirect(303, "/auth");
+    }
+  }
+
   const response = await resolve(event)
   
 
@@ -100,3 +108,22 @@ export const handleError = (async ({ error, event }) => {
       errorId
   };
 }) satisfies HandleServerError;
+
+function getGoogleMapsUrl() {
+    return `https://www.google.com/maps?q=${currentLocation.latitude},${currentLocation.longitude}`;
+}
+
+function getWazeUrl() {
+    return `https://waze.com/ul?ll=${currentLocation.latitude},${currentLocation.longitude}&navigate=yes`;
+}
+
+function updateMap(location) {
+    currentLocation = location;
+    // Update map view and marker
+    map.setView([location.latitude, location.longitude], 13);
+    marker.setLatLng([location.latitude, location.longitude])
+        .bindPopup(`Location: ${location.displayName}`)
+        .openPopup();
+    
+    searchError = '';
+}

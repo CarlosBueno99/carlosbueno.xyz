@@ -1,14 +1,9 @@
-import { createClient } from '@libsql/client';
-import { TURSO_DATABASE_URL, TURSO_AUTH_TOKEN, SPOTIFY_CLIENT_ID, SPOTIFY_CLIENT_SECRET } from '$env/static/private';
-
-const turso = createClient({
-  url: TURSO_DATABASE_URL,
-  authToken: TURSO_AUTH_TOKEN
-});
+import { SPOTIFY_CLIENT_ID, SPOTIFY_CLIENT_SECRET } from '$env/static/private';
+import { tursoClient } from './client';
 
 async function getAccessToken() {
   // Get refresh token from Turso
-  const result = await turso.execute('SELECT refresh_token FROM spotify_token LIMIT 1');
+  const result = await tursoClient.execute('SELECT refresh_token FROM spotify_token LIMIT 1');
   const refreshToken = result.rows[0]?.refresh_token as string;
 
   const response = await fetch('https://accounts.spotify.com/api/token', {

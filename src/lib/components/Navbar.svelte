@@ -48,6 +48,14 @@
 							</span>
 						</a>
 					</li>
+					<li>
+						<a href="/tracking" class="block px-4 py-2 text-sm text-[#999999] hover:bg-[#404040] hover:text-white transition-colors">
+							Location Tracking
+							<span class="ml-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-[#44D62C] text-black">
+								New
+							</span>
+						</a>
+					</li>
 				</ul>
 			</div>
 		</div>
