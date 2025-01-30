@@ -5,6 +5,10 @@ async function getAccessToken() {
   // Get refresh token from Turso
   const result = await tursoClient.execute('SELECT refresh_token FROM spotify_token LIMIT 1');
   const refreshToken = result.rows[0]?.refresh_token as string;
+  
+  if (!refreshToken) {
+    throw new Error('No refresh token found in database. Please set up Spotify authentication first.');
+  }
 
   const response = await fetch('https://accounts.spotify.com/api/token', {
     method: 'POST',
@@ -21,6 +25,9 @@ async function getAccessToken() {
   });
 
   const data = await response.json();
+  if (!data.access_token) {
+    throw new Error('Failed to get access token: ' + JSON.stringify(data));
+  }
   return data.access_token;
 }
 
@@ -63,7 +70,7 @@ export async function getTopGenres() {
 
   // Sort and get top 5 genres
   return Object.entries(genreCounts)
-    .sort(([, a], [, b]) => b - a)
+    .sort(([, a], [, b]) => (b as number) - (a as number))
     .slice(0, 5)
     .map(([genre]) => genre);
 }

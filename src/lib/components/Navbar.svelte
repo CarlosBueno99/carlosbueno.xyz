@@ -4,6 +4,11 @@
 	let isMenuOpen = false;
 	let isProfileMenuOpen = false;
 
+	$: if ($page?.data?.session) {
+		console.log('Session data:', $page.data.session);
+		console.log('User image:', $page.data.session?.user?.image);
+	}
+
 	function toggleMenu() {
 		isMenuOpen = !isMenuOpen;
 	}
@@ -72,11 +77,27 @@
 					class="flex items-center p-1 rounded-full hover:ring-2 hover:ring-[#404040] transition-all"
 					on:click|stopPropagation={toggleProfileMenu}
 				>
-					<div class="h-10 w-10 rounded-full overflow-hidden">
-						{#if $page.data?.session?.user?.image}
-							<img src={$page.data?.session?.user?.image} alt="profile_pic" />
+					<div class="h-10 w-10 rounded-full overflow-hidden bg-[#404040]">
+						{#if $page?.data?.session?.user?.image && $page.data.session.user.image !== ''}
+							<img 
+								src={$page.data.session.user.image} 
+								alt="Profile" 
+								class="w-full h-full object-cover"
+								referrerpolicy="no-referrer"
+								crossorigin="anonymous"
+								on:error={(e) => {
+									const img = e.currentTarget;
+									if (img instanceof HTMLImageElement) {
+										img.src = '/asdf.jpeg';
+									}
+								}}
+							/>
 						{:else}
-							<img src="/asdf.jpeg" alt="profile_pic" />
+							<img 
+								src="/asdf.jpeg" 
+								alt="Default Profile" 
+								class="w-full h-full object-cover"
+							/>
 						{/if}
 					</div>
 				</button>
