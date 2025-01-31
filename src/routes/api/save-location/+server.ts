@@ -4,6 +4,7 @@ import { tursoClient } from '$lib/server/client';
 
 export const POST = async ({ request }) => {
     console.log('Saving location', request);
+    console.log('Request body:', await request.json());
     try {
         const { url, password } = await request.json();
 
