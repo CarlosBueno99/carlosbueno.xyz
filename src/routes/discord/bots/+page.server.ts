@@ -1,15 +1,19 @@
+import { tursoClient } from '$lib/server/client';
+import { error } from '@sveltejs/kit';
 import { createBot, deleteBot } from '$lib/server/discord';
-import { prisma } from '$lib/server/prisma';
 import type { PageServerLoad, Actions } from './$types';
 
-export const load = (async () => {
+export async function load() {
     try {
-        await prisma.discordBot.findMany()
-        return {bots: await prisma.discordBot.findMany()};
-    } catch (error) {
-        return {error: "failed query, look at the server logs"}
+        const result = await tursoClient.execute('SELECT * FROM discord_bots');
+        return {
+            bots: result.rows
+        };
+    } catch (err) {
+        console.error('Error fetching bots:', err);
+        throw error(500, 'Failed to fetch bots');
     }
-}) satisfies PageServerLoad;
+}
 
 export const actions: Actions = {
     createBot: async ({ request }) => {

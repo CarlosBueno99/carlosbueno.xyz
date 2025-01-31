@@ -1,27 +1,13 @@
-import { createWebhook } from '$lib/server/discord';
-// import { prisma } from '$lib/server/prisma';
-import type { Actions } from './$types';
+import { tursoClient } from '$lib/server/client';
+import { error } from '@sveltejs/kit';
+import type { PageServerLoad } from './$types';
 
 export const load = (async () => {
-    return {info: "nothing"}
-})
-
-export const actions: Actions = {
-    createBot: async ({ request }) => {
-
-        // const data = await request.formData()
-        // const name = data.get('name') as string
-        // const webhookUrl = data.get('webhookUrl') as string
-        // const ownerId = data.get('ownerId') as string
-
-        console.log(request);
-        
-
-        
-        await createWebhook()
-
-        return {
-            success: true
-        };
+    try {
+        const result = await tursoClient.execute('SELECT * FROM discord_webhooks');
+        return { webhooks: result.rows };
+    } catch (err) {
+        console.error('Error fetching webhooks:', err);
+        throw error(500, 'Failed to fetch webhooks');
     }
-};
+}) satisfies PageServerLoad;
