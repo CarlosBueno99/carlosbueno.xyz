@@ -3,6 +3,7 @@ import { LOCATION_API_PASSWORD } from '$env/static/private';
 import { tursoClient } from '$lib/server/client';
 
 export const POST = async ({ request }) => {
+    console.log('Saving location', request);
     try {
         const { url, password } = await request.json();
 
