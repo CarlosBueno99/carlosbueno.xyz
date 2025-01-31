@@ -3,10 +3,9 @@ import { LOCATION_API_PASSWORD } from '$env/static/private';
 import { tursoClient } from '$lib/server/client';
 
 export const POST = async ({ request }) => {
-    console.log('Saving location', request);
-    console.log('Request body:', await request.json());
     try {
         const { url, password } = await request.json();
+        console.log('Received request:', { url, password });
 
         if (password !== LOCATION_API_PASSWORD) {
             return json({ error: 'Unauthorized' }, { status: 401 });
