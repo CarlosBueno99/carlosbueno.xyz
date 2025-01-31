@@ -1,30 +1,34 @@
 import { SPOTIFY_CLIENT_ID, SPOTIFY_CLIENT_SECRET } from '$env/static/private';
+import type { RequestHandler } from './$types';
 import { tursoClient } from '$lib/server/client';
-import { error } from '@sveltejs/kit';
-import type { RequestEvent } from '@sveltejs/kit';
 
-const REDIRECT_URI = 'http://localhost:5173/api/spotify/auth/callback';
+export const GET: RequestHandler = async ({ url, request }) => {
+    console.log('Callback URL:', url.toString());
+    console.log('Search params:', Object.fromEntries(url.searchParams));
+    console.log('Request headers:', Object.fromEntries(request.headers));
+    
+    const code = url.searchParams.get('code');
+    const error = url.searchParams.get('error');
+    
+    if (error) {
+        console.error('Spotify auth error:', error);
+        return new Response(`Authentication error: ${error}`, { status: 400 });
+    }
+    
+    if (!code) {
+        console.error('No code in params:', url.searchParams.toString());
+        return new Response('No code provided', { status: 400 });
+    }
 
-interface SpotifyTokenResponse {
-    access_token: string;
-    token_type: string;
-    expires_in: number;
-    refresh_token: string;
-    scope: string;
-}
+    // Ensure we have the correct protocol
+    const protocol = url.protocol === 'http:' ? 'http:' : 'https:';
+    // Construct base URL without trailing slash
+    const baseUrl = `${protocol}//${url.host}`.replace(/\/$/, '');
+    const REDIRECT_URI = `${baseUrl}/api/spotify/auth/callback`;
+    
+    console.log('Using redirect URI:', REDIRECT_URI);
 
-interface SpotifyErrorResponse {
-    error: string;
-    error_description: string;
-}
-
-export async function GET({ url }: RequestEvent) {
     try {
-        const code = url.searchParams.get('code');
-        if (!code) {
-            throw error(400, 'No code provided');
-        }
-
         // Exchange code for tokens
         const tokenResponse = await fetch('https://accounts.spotify.com/api/token', {
             method: 'POST',
@@ -37,48 +41,38 @@ export async function GET({ url }: RequestEvent) {
             body: new URLSearchParams({
                 grant_type: 'authorization_code',
                 code,
-                redirect_uri: REDIRECT_URI
-            }).toString()
+                redirect_uri: REDIRECT_URI,
+            }),
         });
 
         const data = await tokenResponse.json();
+        console.log('Token response status:', tokenResponse.status);
         
         if (!tokenResponse.ok) {
-            console.error('Spotify token error:', data);
-            throw error(500, `Failed to exchange code for tokens: ${data.error_description || data.error}`);
+            console.error('Token exchange failed:', data);
+            return new Response(`Token exchange failed: ${data.error}`, { status: tokenResponse.status });
         }
 
-        // Store refresh token in database
-        try {
-            // Clear existing tokens
-            await tursoClient.execute('DELETE FROM spotify_token');
-            
-            // Store new refresh token
-            await tursoClient.execute({
-                sql: 'INSERT INTO spotify_token (refresh_token) VALUES (?)',
-                args: [data.refresh_token]
-            });
-
-            // Set a cookie with success message
-            return new Response(null, {
-                status: 302,
-                headers: {
-                    'Location': '/',
-                    'Set-Cookie': `spotify_auth_success=true; Path=/; HttpOnly; SameSite=Lax; Max-Age=30`
-                }
-            });
-        } catch (err) {
-            console.error('Database error:', err);
-            throw error(500, 'Failed to store refresh token in database');
+        if (!data.refresh_token) {
+            console.error('No refresh token in response:', data);
+            throw new Error('No refresh token received');
         }
-    } catch (err) {
-        console.error('Authentication error:', err);
+
+        // Store the refresh token in the database
+        await tursoClient.execute({
+            sql: 'INSERT OR REPLACE INTO spotify_token (id, refresh_token) VALUES (?, ?)',
+            args: [1, data.refresh_token]
+        });
+
+        // Redirect back to the home page with success parameter
         return new Response(null, {
             status: 302,
             headers: {
-                'Location': '/?error=spotify_auth_failed',
-                'Set-Cookie': `spotify_auth_error=true; Path=/; HttpOnly; SameSite=Lax; Max-Age=30`
+                Location: '/?spotify=success'
             }
         });
+    } catch (error) {
+        console.error('Error in Spotify callback:', error);
+        return new Response('Authentication failed', { status: 500 });
     }
-} 
+}; 
