@@ -16,10 +16,11 @@ import { redirect, type Handle } from "@sveltejs/kit";
 import { sequence } from "@sveltejs/kit/hooks";
 
 async function authorization({ event, resolve }) {
+  console.log('Request path:', event.url.pathname);
+  
   // Protect any routes under /discord
   if (event.url.pathname.startsWith("/discord")) {
     const session = await event.locals.getSession();
-
     console.log('discord session', session);
     
     if (!session) {
@@ -37,10 +38,16 @@ async function authorization({ event, resolve }) {
     }
   }
 
-  const response = await resolve(event)
-  
+  // Protect exercise route
+  if (event.url.pathname.startsWith("/exercise")) {
+    const session = await event.locals.getSession();
+    console.log('Exercise route session:', session);
+    if (!session) {
+      throw redirect(303, "/auth");
+    }
+  }
 
-  
+  const response = await resolve(event);
   return response;
 }
 
@@ -62,6 +69,7 @@ export const handle: Handle = sequence(
         issuer: COGNITO_ISSUER,
       }),
     ],
+    trustHost: true,
     callbacks: {
       async jwt({ token, user }) {
         if (user) {
@@ -95,18 +103,18 @@ export const handle: Handle = sequence(
 
 
 export const handleError = (async ({ error, event }) => {
-  const errorId = crypto.randomUUID();
-  console.log("that's weird");
-  console.log(event.request.headers.get('cf-ipcountry'));
-  console.log(event.request.headers.get('cf-ray'));
-  console.log(event.request.headers.get('cf-connecting-ip'));
-  console.log(event.request.headers)
-  console.log(errorId);
-  
-  return {
-      message: 'Whoops!',
-      errorId
-  };
+    const errorId = crypto.randomUUID();
+    console.error('Server Error:', {
+        error,
+        message: error.message,
+        stack: error.stack,
+        cause: error.cause
+    });
+    
+    return {
+        message: error.message || 'An unexpected error occurred',
+        errorId
+    };
 }) satisfies HandleServerError;
 
 function getGoogleMapsUrl() {

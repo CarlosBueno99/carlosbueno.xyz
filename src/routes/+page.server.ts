@@ -1,5 +1,7 @@
 import { STEAM_API_KEY, CARLOS_STEAM_ID } from '$env/static/private';
 import { error } from '@sveltejs/kit';
+import { tursoClient } from '$lib/server/client';
+import type { PageServerLoad } from './$types';
 
 async function fetchSteamStats() {
     const baseUrl = 'https://api.steampowered.com/ISteamUserStats/GetUserStatsForGame/v2/';
@@ -110,9 +112,21 @@ async function fetchSteamStats() {
     }
 }
 
-export async function load() {
+export const load: PageServerLoad = async ({ locals }) => {
     const stats = await fetchSteamStats();
+
+    // Load exercise data for the current month
+    const startOfMonth = new Date();
+    startOfMonth.setDate(1);
+    startOfMonth.setHours(0, 0, 0, 0);
+
+    const { rows: exercises } = await tursoClient.execute({
+        sql: 'SELECT id, check_in, check_out FROM exercises WHERE check_in >= ? ORDER BY check_in DESC',
+        args: [startOfMonth.toISOString()]
+    });
+
     return {
-        stats
+        stats,
+        exercises
     };
-}
+};
